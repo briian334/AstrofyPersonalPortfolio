@@ -1,0 +1,36 @@
+---
+const { sideBarActiveItemID } = Astro.props;
+const activeClass = "bg-base-300"; // For primary color replace with `active` class
+import type { Lang } from "../types/lang.type";
+import en from "../i18n/en";
+import es from "../i18n/es";
+
+export function getStaticPaths() {
+  return [{ params: { lang: "es" } }, { params: { lang: "en" } }];
+}
+
+export const defaultLang = "/es";
+
+const lang = Astro.params.lang as Lang;
+const translations = {es,en};
+const t = translations[lang];
+---
+
+<ul class="menu grow shrink menu-md overflow-y-auto">
+    <li><a class="py-3 text-base" id="home" href="/">{t.nav.home}</a></li>
+    <li><a class="py-3 text-base" id="projects" href="/projects">{t.nav.projects}</a></li>
+    <li><a class="py-3 text-base" id="cv" href="/cv">{t.nav.cv}</a></li>
+    <li>
+        <a
+            class="py-3 text-base"
+            href="mailto:contact.ricardo.cervanntes@hotmail.com"
+            target="_blank"
+            referrerpolicy="no-referrer-when-downgrade">{t.nav.contact}</a
+        >
+    </li>
+</ul>
+
+<script define:vars={{ sideBarActiveItemID: sideBarActiveItemID, activeClass: activeClass }}>
+const activeItemElem = document.getElementById(sideBarActiveItemID);
+activeItemElem && activeItemElem.classList.add(activeClass);
+</script>

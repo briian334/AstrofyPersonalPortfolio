@@ -1,0 +1,90 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import HorizontalCard from "../../components/HorizontalCard.astro";
+import { getCollection } from "astro:content";
+import createSlug from "../../lib/createSlug"
+import type { Lang } from "../../types/lang.type";
+import en from "../../i18n/en";
+import es from "../../i18n/es";
+import LangSelector from "@components/LangSelector.astro";
+import ThemeSelector from "@components/ThemeSelector.astro";
+
+export function getStaticPaths() {
+  return [{ params: { lang: "es" } }, { params: { lang: "en" } }];
+}
+
+export const defaultLang = "/es";
+
+const lang = Astro.params.lang as Lang;
+const translations: Record<Lang, typeof en> = {es,en};
+const t = translations[lang];
+
+const posts = (await getCollection("blog")).sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+const last_posts = posts.slice(0, 3);
+---
+<head>
+  <!-- Global Metadata -->
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<meta name="generator" content={Astro.generator} />
+</head>
+<div
+  class="fixed hidden top-0 z-30 lg:block h-16 w-full justify-center bg-opacity-90 backdrop-blur transition-all duration-100 bg-base-100 text-base-content"
+>
+  <div class="navbar">
+    <div class="navbar-start"></div>
+    <div class="navbar-center"></div>
+    <div class="navbar-end">
+      <ThemeSelector class="mx-4"/>
+      <LangSelector lang={lang}/>
+    </div>
+  </div>
+</div>
+<BaseLayout sideBarActiveItemID="home" lang={lang}>
+  
+  <div class="pb-12 mt-5">
+    <div class="text-xl py-1">{t.home.title}</div>
+    <div class="text-4xl font-bold">{t.home.subtitle}</div>
+    <div class="text-xl py-3 font-light">{t.home.position}</div>
+    <div class="py-2">
+      <text class="text-lg font-bold">
+        {t.home.descriptionTitle}
+      </text>
+    </div>
+    <div class="py-2">
+      <text class="text-lg">
+        {t.home.descriptionSubTitle}
+      </text>
+    </div>
+  </div>
+
+  <div>
+    <div class="text-3xl w-full font-bold mb-2">{t.home.lastProjectsTitle} </div>
+  </div>
+
+  <HorizontalCard
+    title="Demo Project 1"
+    img="/post_img.webp"
+    desc="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+    url="#"
+    badge="NEW"
+  />
+  <div class="divider my-0"></div>
+  <HorizontalCard
+    title="Demo Project 2"
+    img="/post_img.webp"
+    desc="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+    url="#"
+  />
+  <div class="divider my-0"></div>
+  <HorizontalCard
+    title="Demo Project 3"
+    img="/post_img.webp"
+    desc="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+    url="#"
+    badge="FOSS"
+  />
+  
+</BaseLayout>
