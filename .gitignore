@@ -14,6 +14,8 @@ benchmark/projects/
 benchmark/results/
 test-results/
 *.log
+.prettierignore
+.prettierrc.mjs
 package-lock.json
 .turbo/
 .eslintcache

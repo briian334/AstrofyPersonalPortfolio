@@ -1,8 +1,8 @@
 @import "tailwindcss";
-@plugin '@tailwindcss/typography';
+@plugin "@tailwindcss/typography";
 @plugin "daisyui" {
-    themes: all;
-}
-.time-line-container>div:last-child .education__time>.education__line {
-    display: none;
+  themes:
+    nord --default,
+    sunset --prefersdark,
+    all;
 }
