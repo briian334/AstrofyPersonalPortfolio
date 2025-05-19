@@ -16,13 +16,15 @@ export const defaultLang = "/es";
 const lang = Astro.params.lang as Lang;
 const translations = { es, en };
 const t = translations[lang];
-
-const { sideBarActiveItemID } = Astro.props;
+interface Props {
+	sideBarActiveItemID: string;
+}
+const { sideBarActiveItemID } = Astro.props as Props;
 ---
 
 <div class="drawer-side z-40">
 	<label for="my-drawer" class="drawer-overlay"></label>
-	<aside class="bg-base-100 flex h-auto min-h-full w-[19rem] flex-col px-2 pt-2">
+	<aside class="bg-base-200 flex h-auto min-h-full w-[19rem] flex-col px-2 pt-2">
 		<div class="mx-auto mt-5 mb-6 w-fit">
 			<a href="/">
 				<div class="avatar m-auto block transition ease-in-out hover:scale-[102%]">
@@ -39,7 +41,7 @@ const { sideBarActiveItemID } = Astro.props;
 				</div>
 			</a>
 		</div>
-		<SideBarMenu sideBarActiveItemID={sideBarActiveItemID} />
-		<SideBarFooter />
+		<SideBarMenu sideBarActiveItemID={sideBarActiveItemID} lang={lang} />
+		<SideBarFooter lang={lang} />
 	</aside>
 </div>

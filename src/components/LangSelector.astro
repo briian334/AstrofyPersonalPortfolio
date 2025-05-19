@@ -2,39 +2,42 @@
 import type { Lang } from "../types/lang.type";
 import en from "../i18n/en";
 import es from "../i18n/es";
-import { Languages, Palette } from "@lucide/astro";
+import { Languages } from "@lucide/astro";
 
 export const defaultLang = "/es";
 
 const { lang } = Astro.props;
-const translations: Record<Lang, typeof en> = {es,en};
+const translations: Record<Lang, typeof en> = { es, en };
 const t = translations[lang];
 ---
 
 <div class="dropdown dropdown-end lg:hidden">
-  <label tabindex="0" class="btn btn-ghost m-0">
-    <Languages />
-  </label>
-  <ul tabindex="0" class="p-4 shadow menu menu-md dropdown-content bg-base-100 rounded-box">
-    <li>
-      <a href="/es">{t.languageOptions.es}</a>
-    </li>
-    <li>
-      <a href="/en">{t.languageOptions.en}</a>
-    </li>
-  </ul>
+	<label tabindex="0" class="btn btn-ghost m-0">
+		<Languages />
+	</label>
+	<ul tabindex="0" class="menu menu-md dropdown-content rounded-box bg-base-200 w-40 p-4 shadow">
+		<li>
+			<a href="#" class="language-link" data-lang="es">{t.languageOptions.es}</a>
+		</li>
+		<li>
+			<a href="#" class="language-link" data-lang="en">{t.languageOptions.en}</a>
+		</li>
+	</ul>
 </div>
 
-<div class="dropdown dropdown-hover dropdown-end hidden lg:block ">
-  <div tabindex="0" role="button" class="btn btn-ghost m-1">
-    <Languages size={18} />
-    {t.languageLabel}</div>
-  <ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm">
-    <li>
-      <a href="/es">{t.languageOptions.es}</a>
-    </li>
-    <li>
-      <a href="/en">{t.languageOptions.en}</a>
-    </li>
-  </ul>
+<div class="dropdown dropdown-hover dropdown-end hidden lg:block">
+	<div tabindex="0" role="button" class="btn btn-ghost m-1">
+		<Languages size={18} />
+		{t.languageLabel}
+	</div>
+	<ul tabindex="0" class="dropdown-content menu bg-base-200 rounded-box z-1 w-52 p-2 shadow-sm">
+		<li>
+			<a role="button" class="language-link" data-lang="es">{t.languageOptions.es}</a>
+		</li>
+		<li>
+			<a role="button" class="language-link" data-lang="en">{t.languageOptions.en}</a>
+		</li>
+	</ul>
 </div>
+
+<script src="../scripts/langSelector.ts"></script>

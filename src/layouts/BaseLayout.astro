@@ -5,51 +5,108 @@ import Footer from "../components/Footer.astro";
 import SideBar from "../components/SideBar.astro";
 import { ClientRouter } from "astro:transitions";
 import "../styles/global.css";
+import LangSelector from "@components/LangSelector.astro";
+import ThemeSelector from "@components/ThemeSelector.astro";
 
 import { SITE_TITLE, SITE_DESCRIPTION, TRANSITION_API } from "../config";
 
 import type { Lang } from "../types/lang.type";
 
 interface Props {
-  image?: string;
-  title?: string;
-  description?: string;
-  includeSidebar?: boolean;
-  sideBarActiveItemID?: string;
-  ogType?: string;
-  lang: Lang;
+	image?: string;
+	title?: string;
+	description?: string;
+	includeSidebar?: boolean;
+	sideBarActiveItemID: string;
+	ogType?: string;
+	lang: Lang;
 }
 
 const {
-  image,
-  title = SITE_TITLE,
-  description = SITE_DESCRIPTION,
-  includeSidebar = true,
-  sideBarActiveItemID,
-  ogType,
-  lang
+	image,
+	title = SITE_TITLE,
+	description = SITE_DESCRIPTION,
+	includeSidebar = true,
+	sideBarActiveItemID,
+	ogType,
+	lang,
 } = Astro.props as Props;
 ---
 
 <!doctype html>
-<html lang="es" data-theme="night">
-  <head>
-    <BaseHead title={title} description={description} image={image} ogType={ogType} />
-    {TRANSITION_API && <ClientRouter />}
-  </head>
-  <body>
-    <div class="bg-base-100 drawer lg:drawer-open">
-      <input id="my-drawer" type="checkbox" class="drawer-toggle" />
-      <div class="drawer-content bg-base-100">
-        <Header title={SITE_TITLE} lang={lang} />
-        <div class="md:flex md:justify-center">
-          <main class="p-6 pt-10 lg:max-w-[900px] max-w-[100vw]">
-            <slot />
-          </main>
-        </div>
-        <Footer lang={ lang }/>
-      </div>
-      {includeSidebar && <SideBar sideBarActiveItemID={sideBarActiveItemID} />}
-    </div>
-  </body>
+<html lang={lang}>
+	<head>
+		<!-- Global Metadata -->
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width,initial-scale=1" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="generator" content={Astro.generator} />
+
+		<BaseHead title={title} description={description} image={image} ogType={ogType} />
+		{TRANSITION_API && <ClientRouter />}
+
+		<!-- Script para aplicar el tema antes de renderizar la página -->
+		<script is:inline>
+			// Obtener el tema desde localStorage o usar 'nord' como predeterminado
+			const savedTheme = localStorage.getItem("theme") || "nord";
+			document.documentElement.setAttribute("data-theme", savedTheme);
+
+			// Redirigir basado en idioma preferido lo antes posible
+			const savedLang = localStorage.getItem("preferredLang") || "es";
+			document.documentElement.setAttribute("lang", savedLang);
+
+			const currentPath = window.location.pathname;
+
+			// Extrae el lang actual desde la URL (ej: 'es' en /es/projects)
+			const urlLangMatch = currentPath.match(/^\/(es|en)(\/|$)/);
+			const currentLangInURL = urlLangMatch?.[1];
+
+			// Si el lang en URL es diferente al guardado en localStorage, redirige
+			if (currentLangInURL && currentLangInURL !== savedLang) {
+				const newPath = currentPath.replace(/^\/(es|en)/, `/${savedLang}`);
+				window.location.replace(newPath + window.location.search + window.location.hash);
+			}
+		</script>
+	</head>
+	<body>
+		<div
+			class="bg-opacity-90 bg-base-100 text-base-content fixed top-0 z-30 hidden h-16 w-full justify-center backdrop-blur transition-all duration-100 lg:block"
+		>
+			<div class="navbar">
+				<div class="navbar-start"></div>
+				<div class="navbar-center"></div>
+				<div class="navbar-end">
+					<ThemeSelector class="mx-4" />
+					<LangSelector lang={lang} />
+				</div>
+			</div>
+		</div>
+		<div class="bg-base-100 drawer lg:drawer-open">
+			<input id="my-drawer" type="checkbox" class="drawer-toggle" />
+			<div class="drawer-content bg-base-100">
+				<Header title={SITE_TITLE} lang={lang} />
+				<div class="md:flex md:justify-center">
+					<main class="max-w-[100vw] p-6 pt-10 lg:max-w-[900px]">
+						<slot />
+					</main>
+				</div>
+				<Footer lang={lang} />
+			</div>
+			{includeSidebar && <SideBar sideBarActiveItemID={sideBarActiveItemID} />}
+		</div>
+		<!-- Script para inicializar el tema, se carga en cada página -->
+		<script>
+			// Importar e inicializar el tema después de la carga del DOM
+			import { initTheme } from "../scripts/themeSelector.ts";
+
+			document.addEventListener("DOMContentLoaded", () => {
+				initTheme();
+			});
+
+			// Re-inicializar después de una transición de página con View Transitions API
+			document.addEventListener("astro:page-load", () => {
+				initTheme();
+			});
+		</script>
+	</body>
 </html>

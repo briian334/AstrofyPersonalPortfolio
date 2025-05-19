@@ -9,3 +9,6 @@ export const TRANSITION_API = true;
 export const THEME_KEY = "theme";
 export const DARK_THEME = "sunset";
 export const LIGHT_THEME = "nord";
+export const LANG_KEY = "lang";
+export const SPANISH_LANG = "es";
+export const ENGLISH_LANG = "en";
