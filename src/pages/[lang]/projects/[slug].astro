@@ -1,0 +1,42 @@
+---
+import { getCollection, type CollectionEntry } from "astro:content";
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import type { Lang } from "../../../types/lang.type";
+import type { ProjectSchema } from "../../../content/config";
+import { getRecentProjects, projects } from "../../../types/projects.type";
+import en from "../../../i18n/en";
+import es from "../../../i18n/es";
+import ProjectLayout from "../../../layouts/ProjectLayout.astro";
+
+// Obtener proyectos
+export async function getStaticPaths() {
+	const allProjects = await getCollection("project");
+
+	// Generar rutas dinámicas por idioma
+	return allProjects.map((entry) => ({
+		params: {
+			lang: entry.data.lang, // "es" o "en"
+			slug: entry.slug, // generado desde el nombre del archivo .md
+		},
+		props: {
+			entry,
+		},
+	}));
+}
+
+// Props
+const { entry } = Astro.props;
+const { Content } = await entry.render();
+const project = entry.data;
+---
+
+<!-- Usa el layout y pasa contenido + metadata -->
+<ProjectLayout
+	title={project.title}
+	image={project.image}
+	badge={project.badge}
+	technologies={project.technologies}
+	links={project.links}
+>
+	<Content />
+</ProjectLayout>

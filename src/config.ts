@@ -3,7 +3,7 @@
 
 export const SITE_TITLE = "Portfolio Website by Brian Cervantes";
 export const SITE_DESCRIPTION =
-  "Personal Portfolio Website by Brian Cervantes using Astrofy Template ⚡️";
+	"Personal Portfolio Website by Brian Cervantes using Astrofy Template ⚡️";
 export const GENERATE_SLUG_FROM_TITLE = true;
 export const TRANSITION_API = true;
 export const THEME_KEY = "theme";

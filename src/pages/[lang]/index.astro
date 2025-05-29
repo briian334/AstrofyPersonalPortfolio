@@ -4,9 +4,18 @@ import HorizontalCard from "../../components/HorizontalCard.astro";
 import type { Lang } from "../../types/lang.type";
 import en from "../../i18n/en";
 import es from "../../i18n/es";
+import { getRecentProjects, projects } from "../../types/projects.type";
 
-export function getStaticPaths() {
-	return [{ params: { lang: "es" } }, { params: { lang: "en" } }];
+const recentProjects = getRecentProjects(3); // Obtener los 6 más recientes
+export async function getStaticPaths() {
+	return projects.flatMap((project) => [
+		{
+			params: { id: project.id.toString(), lang: "es" },
+		},
+		{
+			params: { id: project.id.toString(), lang: "en" },
+		},
+	]);
 }
 
 export const defaultLang = "/es";
@@ -36,27 +45,9 @@ const t = translations[lang];
 	<div>
 		<div class="mb-2 w-full text-3xl font-bold">{t.home.lastProjectsTitle}</div>
 	</div>
-
-	<HorizontalCard
-		title="Demo Project 1"
-		img="/post_img.webp"
-		desc="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
-		url="#"
-		badge="NEW"
-	/>
-	<div class="divider my-0"></div>
-	<HorizontalCard
-		title="Demo Project 2"
-		img="/post_img.webp"
-		desc="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
-		url="#"
-	/>
-	<div class="divider my-0"></div>
-	<HorizontalCard
-		title="Demo Project 3"
-		img="/post_img.webp"
-		desc="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
-		url="#"
-		badge="FOSS"
-	/>
+	<main class="container mx-auto px-4 py-8">
+		<div class="grid grid-cols-1 gap-6">
+			{recentProjects.map((project) => <HorizontalCard project={project} lang={lang} />)}
+		</div>
+	</main>
 </BaseLayout>

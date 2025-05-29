@@ -4,61 +4,35 @@ import HorizontalCard from "../../components/HorizontalCard.astro";
 import type { Lang } from "../../types/lang.type";
 import en from "../../i18n/en";
 import es from "../../i18n/es";
+import { getRecentProjects, projects } from "../../types/projects.type";
 
-export function getStaticPaths() {
-	return [{ params: { lang: "es" } }, { params: { lang: "en" } }];
+export async function getStaticPaths() {
+	return projects.flatMap((project) => [
+		{
+			params: { id: project.id.toString(), lang: "es" },
+		},
+		{
+			params: { id: project.id.toString(), lang: "en" },
+		},
+	]);
 }
 
 export const defaultLang = "/es";
 
-const lang = Astro.params.lang as Lang;
+const { lang } = Astro.params as { lang: Lang };
 const translations: Record<Lang, typeof en> = { es, en };
 const t = translations[lang];
+
+const recentProjects = getRecentProjects(6); // Obtener los 6 más recientes
 ---
 
 <BaseLayout title="Projects" sideBarActiveItemID="projects" lang={lang}>
 	<div class="mt-5">
-		<div class="mb-5 w-full text-3xl font-bold">Projects Header</div>
+		<div class="mb-5 w-full text-3xl font-bold">Todos mis proyectos</div>
 	</div>
-
-	<HorizontalCard
-		title="Demo Project 1"
-		img="/post_img.webp"
-		desc="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
-		url="#"
-		badge="NEW"
-	/>
-	<div class="divider my-0"></div>
-	<HorizontalCard
-		title="Demo Project 2"
-		img="/post_img.webp"
-		desc="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
-		url="#"
-	/>
-
-	<div>
-		<div class="mt-10 mb-5 w-full text-3xl font-bold">Projects Header</div>
-	</div>
-
-	<HorizontalCard
-		title="Demo Project 3"
-		img="/post_img.webp"
-		desc="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
-		url="#"
-		badge="FOSS"
-	/>
-	<div class="divider my-0"></div>
-	<HorizontalCard
-		title="Demo Project 4"
-		img="/post_img.webp"
-		desc="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
-		url="#"
-	/>
-	<div class="divider my-0"></div>
-	<HorizontalCard
-		title="Demo Project 5"
-		img="/post_img.webp"
-		desc="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
-		url="#"
-	/>
+	<main class="container mx-auto px-4 py-8">
+		<div class="grid grid-cols-1 gap-6">
+			{recentProjects.map((project) => <HorizontalCard project={project} lang={lang} />)}
+		</div>
+	</main>
 </BaseLayout>

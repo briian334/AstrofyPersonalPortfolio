@@ -1,12 +1,25 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import type { Lang } from "../../types/lang.type";
+import en from "../../i18n/en";
+import es from "../../i18n/es";
+
+export function getStaticPaths() {
+	return [{ params: { lang: "es" } }, { params: { lang: "en" } }];
+}
+
+export const defaultLang = "/es";
+
+const lang = Astro.params.lang as Lang;
+const translations: Record<Lang, typeof en> = { es, en };
+const t = translations[lang];
 ---
 
-<BaseLayout title = "404: Not Found" includeSidebar={false}>
-  <div class="text-center">
-    <h1 class="text-9xl font-bold mb-4">🏝</h1>
-    <h1 class="text-9xl font-bold mb-2">404</h1>
-    <h3 class="text-2xl">The page you're looking for couldn't be found.</h3>
-    <a class="btn btn-accent mt-9" href="/">Home</a>
-  </div>
+<BaseLayout title="404: Not Found" includeSidebar={false} lang={lang} sideBarActiveItemID="">
+	<div class="text-center">
+		<h1 class="mb-4 text-9xl font-bold">🏝</h1>
+		<h1 class="mb-2 text-9xl font-bold">404</h1>
+		<h3 class="text-2xl">The page you're looking for couldn't be found.</h3>
+		<a class="btn btn-accent mt-9" href="/">Home</a>
+	</div>
 </BaseLayout>
