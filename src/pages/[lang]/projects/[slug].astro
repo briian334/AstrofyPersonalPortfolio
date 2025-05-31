@@ -1,18 +1,13 @@
 ---
 import { getCollection, type CollectionEntry } from "astro:content";
-import BaseLayout from "../../../layouts/BaseLayout.astro";
 import type { Lang } from "../../../types/lang.type";
 import type { ProjectSchema } from "../../../content/config";
-import { getRecentProjects, projects } from "../../../types/projects.type";
-import en from "../../../i18n/en";
-import es from "../../../i18n/es";
 import ProjectLayout from "../../../layouts/ProjectLayout.astro";
 
-// Obtener proyectos
+// Generar rutas para cada slug en ambos idiomas
 export async function getStaticPaths() {
 	const allProjects = await getCollection("project");
 
-	// Generar rutas dinámicas por idioma
 	return allProjects.map((entry) => ({
 		params: {
 			lang: entry.data.lang, // "es" o "en"
@@ -24,19 +19,19 @@ export async function getStaticPaths() {
 	}));
 }
 
-// Props
 const { entry } = Astro.props;
 const { Content } = await entry.render();
-const project = entry.data;
+const project: ProjectSchema = entry.data;
+const { lang } = Astro.params as { lang: Lang };
 ---
 
-<!-- Usa el layout y pasa contenido + metadata -->
 <ProjectLayout
 	title={project.title}
 	image={project.image}
 	badge={project.badge}
 	technologies={project.technologies}
 	links={project.links}
+	lang={entry.data.lang}
 >
 	<Content />
 </ProjectLayout>

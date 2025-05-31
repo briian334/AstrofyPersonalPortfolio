@@ -1,0 +1,72 @@
+---
+import BaseLayout from "./BaseLayout.astro";
+import type { Lang } from "../types/lang.type";
+import type { ProjectSchema } from "../content/config";
+
+interface Props {
+	title: string;
+	image: string;
+	badge?: string;
+	technologies: string[];
+	links: {
+		demo?: string;
+		github?: string;
+		live?: string;
+	};
+	lang: Lang;
+}
+
+const { title, image, badge, technologies, links, lang } = Astro.props as Props;
+---
+
+<BaseLayout title={title} sideBarActiveItemID="projects" lang={lang}>
+	<article class="prose max-w-none">
+		<h1>{title}</h1>
+
+		{badge && <div class="badge">{badge}</div>}
+
+		<img src={image} alt={title} class="my-4 rounded-lg shadow-lg" />
+
+		<section class="mb-4">
+			<h2 class="text-xl font-semibold">Tecnologías</h2>
+			<div class="flex flex-wrap gap-2">
+				{technologies.map((tech) => <span class="badge badge-outline">{tech}</span>)}
+			</div>
+		</section>
+
+		<section class="mb-4">
+			<h2 class="text-xl font-semibold">Enlaces</h2>
+			<ul class="list-inside list-disc">
+				{
+					links.demo && (
+						<li>
+							<a href={links.demo} class="link">
+								{links.demo}
+							</a>
+						</li>
+					)
+				}
+				{
+					links.github && (
+						<li>
+							<a href={links.github} class="link">
+								{links.github}
+							</a>
+						</li>
+					)
+				}
+				{
+					links.live && (
+						<li>
+							<a href={links.live} class="link">
+								{links.live}
+							</a>
+						</li>
+					)
+				}
+			</ul>
+		</section>
+
+		<slot />
+	</article>
+</BaseLayout>

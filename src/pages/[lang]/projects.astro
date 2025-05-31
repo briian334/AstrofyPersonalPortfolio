@@ -4,15 +4,16 @@ import HorizontalCard from "../../components/HorizontalCard.astro";
 import type { Lang } from "../../types/lang.type";
 import en from "../../i18n/en";
 import es from "../../i18n/es";
-import { getRecentProjects, projects } from "../../types/projects.type";
+import { getCollection } from "astro:content";
 
 export async function getStaticPaths() {
+	const projects = await getCollection("project");
 	return projects.flatMap((project) => [
 		{
-			params: { id: project.id.toString(), lang: "es" },
+			params: { slug: project.slug, lang: "es" },
 		},
 		{
-			params: { id: project.id.toString(), lang: "en" },
+			params: { slug: project.slug, lang: "en" },
 		},
 	]);
 }
@@ -23,7 +24,10 @@ const { lang } = Astro.params as { lang: Lang };
 const translations: Record<Lang, typeof en> = { es, en };
 const t = translations[lang];
 
-const recentProjects = getRecentProjects(6); // Obtener los 6 más recientes
+const allProjects = await getCollection("project");
+const recentProjects = allProjects
+	.sort((a, b) => new Date(b.data.startDate).getTime() - new Date(a.data.startDate).getTime())
+	.slice(0, 6);
 ---
 
 <BaseLayout title="Projects" sideBarActiveItemID="projects" lang={lang}>

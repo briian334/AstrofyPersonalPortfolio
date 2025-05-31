@@ -1,45 +1,42 @@
 ---
 import { Image } from "astro:assets";
-import type { Project } from "../types/projects.type";
+import type { CollectionEntry } from "astro:content";
+import type { ProjectSchema } from "../content/config";
 import type { Lang } from "../types/lang.type";
 import { getRelativeLocaleUrl } from "astro:i18n";
+import { getBadgeClass } from "../types/projects.type"; // solo si sigues usando badges
 import en from "../i18n/en";
 import es from "../i18n/es";
-import { getBadgeClass } from "../types/projects.type";
+
 interface Props {
-	project: Project;
+	project: CollectionEntry<"project">;
 	lang: Lang;
 }
 
 const { project, lang } = Astro.props;
-const translations: Record<Lang, typeof en> = { es, en };
-const t = translations[lang];
+const t = { es, en }[lang];
+const data = project.data;
 ---
 
 <div class="bg-base-100 rounded-lg transition ease-in-out hover:scale-[102%] hover:shadow-xl">
-	<a href={getRelativeLocaleUrl(lang, `projects/${project.id}`)}>
+	<a href={getRelativeLocaleUrl(lang, `projects/${project.slug}`)}>
 		<div class="hero-content flex-col md:flex-row">
 			<Image
-				src={project.image}
+				src={data.image}
 				width={750}
 				height={422}
 				format="webp"
-				alt={project.title}
+				alt={data.title}
 				class="max-w-full rounded-lg md:max-w-[13rem]"
 			/>
 			<div class="w-full grow">
 				<h1 class="text-xl font-bold">
-					{project.title}
-
-					{
-						project.badge && (
-							<div class={`badge mx-2 ${getBadgeClass(project.badge)}`}>{project.badge}</div>
-						)
-					}
+					{data.title}
+					{data.badge && <div class={`badge mx-2 ${getBadgeClass(data.badge)}`}>{data.badge}</div>}
 				</h1>
-				<p class="text-1xl py-1">{project.description}</p>
+				<p class="text-1xl py-1">{data.description}</p>
 				<div class="card-actions justify-end">
-					{project.technologies.map((tech) => <span class="badge badge-outline">{tech}</span>)}
+					{data.technologies.map((tech) => <span class="badge badge-outline">{tech}</span>)}
 				</div>
 			</div>
 		</div>

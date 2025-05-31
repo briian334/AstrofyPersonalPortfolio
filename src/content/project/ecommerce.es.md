@@ -1,7 +1,7 @@
 ---
 id: 1
-slug: "ecommerce.es.md"
 title: "E-commerce con Vue"
+description: "Aplicación completa de comercio electrónico con carrito de compras, autenticación de usuarios y pasarela de pagos."
 startDate: "2024-01-15"
 badge: "Destacado"
 technologies: ["Vue.js", "Tailwind CSS", "DaisyUI", "Vite"]

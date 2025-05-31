@@ -4,25 +4,36 @@ import HorizontalCard from "../../components/HorizontalCard.astro";
 import type { Lang } from "../../types/lang.type";
 import en from "../../i18n/en";
 import es from "../../i18n/es";
-import { getRecentProjects, projects } from "../../types/projects.type";
+import { getCollection } from "astro:content";
 
-const recentProjects = getRecentProjects(3); // Obtener los 6 más recientes
 export async function getStaticPaths() {
+	const projects = await getCollection("project");
 	return projects.flatMap((project) => [
 		{
-			params: { id: project.id.toString(), lang: "es" },
+			params: { slug: project.slug, lang: "es" },
 		},
 		{
-			params: { id: project.id.toString(), lang: "en" },
+			params: { slug: project.slug, lang: "en" },
 		},
 	]);
 }
 
-export const defaultLang = "/es";
-
 const lang = Astro.params.lang as Lang;
 const translations: Record<Lang, typeof en> = { es, en };
 const t = translations[lang];
+
+// Obtener los proyectos desde la colección
+const allProjects = await getCollection("project");
+
+// Filtrar por idioma y ordenar por fecha descendente
+const recentProjects = allProjects
+	.filter((p) => p.data.lang === lang)
+	.sort((a, b) => {
+		const dateA = new Date(a.data.startDate);
+		const dateB = new Date(b.data.startDate);
+		return dateB.getTime() - dateA.getTime();
+	})
+	.slice(0, 3); // Solo los 3 más recientes
 ---
 
 <BaseLayout sideBarActiveItemID="home" lang={lang}>
@@ -31,20 +42,17 @@ const t = translations[lang];
 		<div class="text-4xl font-bold">{t.home.subtitle}</div>
 		<div class="py-3 text-xl font-light">{t.home.position}</div>
 		<div class="py-2">
-			<text class="text-lg font-bold">
-				{t.home.descriptionTitle}
-			</text>
+			<p class="text-lg font-bold">{t.home.descriptionTitle}</p>
 		</div>
 		<div class="py-2">
-			<text class="text-lg">
-				{t.home.descriptionSubTitle}
-			</text>
+			<p class="text-lg">{t.home.descriptionSubTitle}</p>
 		</div>
 	</div>
 
 	<div>
 		<div class="mb-2 w-full text-3xl font-bold">{t.home.lastProjectsTitle}</div>
 	</div>
+
 	<main class="container mx-auto px-4 py-8">
 		<div class="grid grid-cols-1 gap-6">
 			{recentProjects.map((project) => <HorizontalCard project={project} lang={lang} />)}
