@@ -10,8 +10,8 @@ export async function getStaticPaths() {
 
 	return allProjects.map((entry) => ({
 		params: {
-			lang: entry.data.lang, // "es" o "en"
-			slug: entry.slug, // generado desde el nombre del archivo .md
+			lang: entry.data.lang,
+			slug: entry.slug,
 		},
 		props: {
 			entry,

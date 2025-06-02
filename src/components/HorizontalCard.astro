@@ -32,7 +32,13 @@ const data = project.data;
 			<div class="w-full grow">
 				<h1 class="text-xl font-bold">
 					{data.title}
-					{data.badge && <div class={`badge mx-2 ${getBadgeClass(data.badge)}`}>{data.badge}</div>}
+					{
+						data.badge && (
+							<div class={`badge mx-2 ${getBadgeClass(data.badge)}`}>
+								{t.projects.badge[data.badge]}
+							</div>
+						)
+					}
 				</h1>
 				<p class="text-1xl py-1">{data.description}</p>
 				<div class="card-actions justify-end">

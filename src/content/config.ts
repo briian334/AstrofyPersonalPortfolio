@@ -36,11 +36,13 @@ const projectSchema = z.object({
 	image: z.string(),
 	technologies: z.array(z.string()),
 	lang: z.enum(["es", "en"]),
-	links: z.object({
-		demo: z.string().optional(),
-		github: z.string().optional(),
-		live: z.string().optional(),
-	}),
+	links: z
+		.object({
+			demo: z.string().optional(),
+			github: z.string().optional(),
+			live: z.string().optional(),
+		})
+		.optional(),
 });
 
 export type BlogSchema = z.infer<typeof blogSchema>;

@@ -1,8 +1,8 @@
 export default {
 	languageLabel: "Language",
 	languageOptions: {
-		es: "🇪🇦 Spanish",
-		en: "🇺🇸 English",
+		es: "Spanish",
+		en: "English",
 	},
 	titles: {
 		main: "Portfolio web by Brian Cervantes",
@@ -36,6 +36,12 @@ export default {
 			"Hi%20Brian!%0AI%20just%20saw%20your%20web%20portfolio%20and%20would%20love%20to%20connect%20with%20you%20to%20explore%20collaboration%20opportunities%20or%20potential%20projects.%0A%0ALooking%20forward%20to%20your%20reply.%0ABest%20regards.",
 	},
 	projects: {
+		title: "All my projects",
 		technologies: "Technologies",
+		badge: {
+			Featured: "Featured",
+			"In progress": "In progress",
+			Important: "Important",
+		},
 	},
 };

@@ -84,15 +84,16 @@ export const getProjectById = (id: number): Project | undefined => {
 
 // Helper para obtener clase de badge
 export const getBadgeClass = (badge?: string): string => {
-	switch (badge) {
-		case "Destacado":
-			return "badge-success"; // verde
-		case "En desarrollo":
-			return "badge-warning"; // amarillo
-		case "Importante":
-			return "badge-error"; // rojo
+	const badgeLower = badge?.toLowerCase();
+	switch (badgeLower) {
+		case "featured":
+			return "badge-success";
+		case "in-progress":
+			return "badge-warning";
+		case "important":
+			return "badge-error";
 		default:
-			return "badge-secondary"; // gris
+			return "badge-secondary";
 	}
 };
 

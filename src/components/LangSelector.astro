@@ -17,10 +17,16 @@ const t = translations[lang];
 	</label>
 	<ul tabindex="0" class="menu menu-md dropdown-content rounded-box bg-base-200 w-40 p-4 shadow">
 		<li>
-			<a href="#" class="language-link" data-lang="es">{t.languageOptions.es}</a>
+			<button role="button" class="language-link flex items-center gap-2" data-lang="es">
+				<img src="https://flagcdn.com/es.svg" width="20" alt="España" class="rounded-sm" />
+				<span>{t.languageOptions.es}</span>
+			</button>
 		</li>
 		<li>
-			<a href="#" class="language-link" data-lang="en">{t.languageOptions.en}</a>
+			<button role="button" class="language-link flex items-center gap-2" data-lang="en">
+				<img src="https://flagcdn.com/gb.svg" width="20" alt="Inglés" class="rounded-sm" />
+				<span>{t.languageOptions.en}</span>
+			</button>
 		</li>
 	</ul>
 </div>
@@ -30,12 +36,18 @@ const t = translations[lang];
 		<Languages size={18} />
 		{t.languageLabel}
 	</div>
-	<ul tabindex="0" class="dropdown-content menu bg-base-200 rounded-box z-1 w-52 p-2 shadow-sm">
+	<ul tabindex="0" class="dropdown-content menu bg-base-200 rounded-box z-10 w-52 p-2 shadow-sm">
 		<li>
-			<a role="button" class="language-link" data-lang="es">{t.languageOptions.es}</a>
+			<button role="button" class="language-link flex items-center gap-2" data-lang="es">
+				<img src="https://flagcdn.com/es.svg" width="20" alt="España" class="rounded-sm" />
+				<span>{t.languageOptions.es}</span>
+			</button>
 		</li>
 		<li>
-			<a role="button" class="language-link" data-lang="en">{t.languageOptions.en}</a>
+			<button role="button" class="language-link flex items-center gap-2" data-lang="en">
+				<img src="https://flagcdn.com/gb.svg" width="20" alt="Inglés" class="rounded-sm" />
+				<span>{t.languageOptions.en}</span>
+			</button>
 		</li>
 	</ul>
 </div>

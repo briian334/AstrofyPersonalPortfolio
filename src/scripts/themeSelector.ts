@@ -1,11 +1,28 @@
 import { DARK_THEME, LIGHT_THEME, THEME_KEY } from "src/config";
 
+// Función segura para acceder a localStorage
+function safeLocalStorageGet(key: string): string | null {
+	try {
+		return localStorage.getItem(key);
+	} catch (e) {
+		console.warn(`No se pudo acceder a localStorage.getItem("${key}")`, e);
+		return null;
+	}
+}
+
+function safeLocalStorageSet(key: string, value: string) {
+	try {
+		localStorage.setItem(key, value);
+	} catch (e) {
+		console.warn(`No se pudo acceder a localStorage.setItem("${key}")`, e);
+	}
+}
+
 // Función para establecer el tema
 function setTheme(theme: string) {
 	document.documentElement.setAttribute("data-theme", theme);
-	localStorage.setItem(THEME_KEY, theme);
+	safeLocalStorageSet(THEME_KEY, theme);
 
-	// Actualizar todos los controles de tema
 	const themeToggles = document.querySelectorAll(".theme-controller");
 	themeToggles.forEach((toggle) => {
 		if (toggle instanceof HTMLInputElement) {
@@ -16,18 +33,16 @@ function setTheme(theme: string) {
 
 // Función para alternar entre temas
 function toggleTheme() {
-	const currentTheme = localStorage.getItem(THEME_KEY) || LIGHT_THEME;
+	const currentTheme = safeLocalStorageGet(THEME_KEY) || LIGHT_THEME;
 	const newTheme = currentTheme === LIGHT_THEME ? DARK_THEME : LIGHT_THEME;
 	setTheme(newTheme);
 }
 
 // Inicializar el tema (se ejecuta en cada carga de página)
 function initTheme() {
-	// Obtener el tema guardado o usar 'nord' como predeterminado
-	const savedTheme = localStorage.getItem(THEME_KEY) || LIGHT_THEME;
+	const savedTheme = safeLocalStorageGet(THEME_KEY) || LIGHT_THEME;
 	setTheme(savedTheme);
 
-	// Agregar event listeners a todos los controles de tema
 	const themeToggles = document.querySelectorAll(".theme-controller");
 	themeToggles.forEach((toggle) => {
 		toggle.addEventListener("change", () => {
@@ -36,5 +51,4 @@ function initTheme() {
 	});
 }
 
-// Exportar funciones para uso en otros archivos
 export { setTheme, toggleTheme, initTheme };

@@ -2,13 +2,15 @@
 import BaseLayout from "./BaseLayout.astro";
 import type { Lang } from "../types/lang.type";
 import type { ProjectSchema } from "../content/config";
+import en from "../i18n/en";
+import es from "../i18n/es";
 
 interface Props {
 	title: string;
 	image: string;
 	badge?: string;
 	technologies: string[];
-	links: {
+	links?: {
 		demo?: string;
 		github?: string;
 		live?: string;
@@ -17,6 +19,7 @@ interface Props {
 }
 
 const { title, image, badge, technologies, links, lang } = Astro.props as Props;
+const t = { es, en }[lang];
 ---
 
 <BaseLayout title={title} sideBarActiveItemID="projects" lang={lang}>
@@ -28,44 +31,42 @@ const { title, image, badge, technologies, links, lang } = Astro.props as Props;
 		<img src={image} alt={title} class="my-4 rounded-lg shadow-lg" />
 
 		<section class="mb-4">
-			<h2 class="text-xl font-semibold">Tecnologías</h2>
+			<h2 class="text-xl font-semibold">{t.projects.technologies}</h2>
 			<div class="flex flex-wrap gap-2">
 				{technologies.map((tech) => <span class="badge badge-outline">{tech}</span>)}
 			</div>
 		</section>
 
-		<section class="mb-4">
-			<h2 class="text-xl font-semibold">Enlaces</h2>
-			<ul class="list-inside list-disc">
-				{
-					links.demo && (
-						<li>
-							<a href={links.demo} class="link">
-								{links.demo}
-							</a>
-						</li>
-					)
-				}
-				{
-					links.github && (
-						<li>
-							<a href={links.github} class="link">
-								{links.github}
-							</a>
-						</li>
-					)
-				}
-				{
-					links.live && (
-						<li>
-							<a href={links.live} class="link">
-								{links.live}
-							</a>
-						</li>
-					)
-				}
-			</ul>
-		</section>
+		{
+			(links?.demo || links?.github || links?.live) && (
+				<section class="mb-4">
+					<h2 class="text-xl font-semibold">Enlaces</h2>
+					<ul class="list-inside list-disc">
+						{links?.demo && (
+							<li>
+								<a href={links.demo} class="link">
+									{links.demo}
+								</a>
+							</li>
+						)}
+						{links?.github && (
+							<li>
+								<a href={links.github} class="link">
+									{links.github}
+								</a>
+							</li>
+						)}
+						{links?.live && (
+							<li>
+								<a href={links.live} class="link">
+									{links.live}
+								</a>
+							</li>
+						)}
+					</ul>
+				</section>
+			)
+		}
 
 		<slot />
 	</article>

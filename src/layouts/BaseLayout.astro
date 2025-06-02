@@ -47,24 +47,28 @@ const {
 
 		<!-- Script para aplicar el tema antes de renderizar la página -->
 		<script is:inline>
-			// Obtener el tema desde localStorage o usar 'nord' como predeterminado
-			const savedTheme = localStorage.getItem("theme") || "nord";
-			document.documentElement.setAttribute("data-theme", savedTheme);
+			try {
+				// Obtener el tema desde localStorage o usar 'nord' como predeterminado
+				const savedTheme = localStorage.getItem("theme") || "nord";
+				document.documentElement.setAttribute("data-theme", savedTheme);
 
-			// Redirigir basado en idioma preferido lo antes posible
-			const savedLang = localStorage.getItem("preferredLang") || "es";
-			document.documentElement.setAttribute("lang", savedLang);
+				// Redirigir basado en idioma preferido lo antes posible
+				const savedLang = localStorage.getItem("preferredLang") || "es";
+				document.documentElement.setAttribute("lang", savedLang);
 
-			const currentPath = window.location.pathname;
+				const currentPath = window.location.pathname;
 
-			// Extrae el lang actual desde la URL (ej: 'es' en /es/projects)
-			const urlLangMatch = currentPath.match(/^\/(es|en)(\/|$)/);
-			const currentLangInURL = urlLangMatch?.[1];
+				// Extrae el lang actual desde la URL (ej: 'es' en /es/projects)
+				const urlLangMatch = currentPath.match(/^\/(es|en)(\/|$)/);
+				const currentLangInURL = urlLangMatch?.[1];
 
-			// Si el lang en URL es diferente al guardado en localStorage, redirige
-			if (currentLangInURL && currentLangInURL !== savedLang) {
-				const newPath = currentPath.replace(/^\/(es|en)/, `/${savedLang}`);
-				window.location.replace(newPath + window.location.search + window.location.hash);
+				// Si el lang en URL es diferente al guardado en localStorage, redirige
+				if (currentLangInURL && currentLangInURL !== savedLang) {
+					const newPath = currentPath.replace(/^\/(es|en)/, `/${savedLang}`);
+					window.location.replace(newPath + window.location.search + window.location.hash);
+				}
+			} catch (e) {
+				console.warn("No se pudo acceder a localStorage. Tema o idioma no se aplicarán.", e);
 			}
 		</script>
 	</head>

@@ -26,13 +26,14 @@ const t = translations[lang];
 
 const allProjects = await getCollection("project");
 const recentProjects = allProjects
+	.filter((p) => p.data.lang === lang)
 	.sort((a, b) => new Date(b.data.startDate).getTime() - new Date(a.data.startDate).getTime())
 	.slice(0, 6);
 ---
 
 <BaseLayout title="Projects" sideBarActiveItemID="projects" lang={lang}>
 	<div class="mt-5">
-		<div class="mb-5 w-full text-3xl font-bold">Todos mis proyectos</div>
+		<div class="mb-5 w-full text-3xl font-bold">{t.projects.title}</div>
 	</div>
 	<main class="container mx-auto px-4 py-8">
 		<div class="grid grid-cols-1 gap-6">
