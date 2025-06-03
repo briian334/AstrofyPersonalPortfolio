@@ -26,16 +26,21 @@ function handleClick(e: MouseEvent) {
 
 	const link = e.currentTarget as HTMLAnchorElement;
 	const newLang = link.getAttribute("data-lang");
-
 	if (!newLang) return;
 
 	setLanguage(newLang);
 
 	const currentPath = window.location.pathname;
-	const pathWithoutLang = currentPath.replace(/^\/(es|en)/, "");
-	const newPath = `/${newLang}${pathWithoutLang}`;
+	const pathParts = currentPath.split("/"); // ["", "es", "projects", "ecommerce"]
 
-	window.location.href = newPath;
+	// Asegura que tenga al menos: ["", lang, "projects", slug]
+	if (pathParts.length >= 4) {
+		const [_, , section, rawSlug] = pathParts;
+		const slug = rawSlug.replace(/\.(en|es)$/, ""); // Limpia el sufijo de idioma si está
+
+		const newPath = `/${newLang}/${section}/${slug}`;
+		window.location.href = newPath;
+	}
 }
 
 // Inicializa al cargar la primera vez

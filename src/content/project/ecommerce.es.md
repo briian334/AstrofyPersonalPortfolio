@@ -1,6 +1,7 @@
 ---
 id: 1
-title: "E-commerce con Vue"
+title: "E-commerce con Vuea"
+slug: "ecommerce"
 description: "Aplicación completa de comercio electrónico con carrito de compras, autenticación de usuarios y pasarela de pagos."
 startDate: "2024-01-15"
 badge: "Featured"

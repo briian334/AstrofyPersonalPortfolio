@@ -1,6 +1,7 @@
 ---
 id: 1
-title: "E-commerce with Vue"
+title: "E-commerce with Vuea"
+slug: "ecommerce"
 description: "Full e-commerce application with shopping cart, user authentication, and payment gateway."
 startDate: "2024-01-15"
 badge: "Featured"

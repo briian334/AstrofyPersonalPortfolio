@@ -7,6 +7,7 @@ import es from "../i18n/es";
 
 interface Props {
 	title: string;
+	slug: string;
 	image: string;
 	badge?: string;
 	technologies: string[];
@@ -18,7 +19,7 @@ interface Props {
 	lang: Lang;
 }
 
-const { title, image, badge, technologies, links, lang } = Astro.props as Props;
+const { title, slug, image, badge, technologies, links, lang } = Astro.props as Props;
 const t = { es, en }[lang];
 ---
 

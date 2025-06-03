@@ -30,6 +30,7 @@ const storeSchema = z.object({
 const projectSchema = z.object({
 	id: z.number(),
 	title: z.string(),
+	slug: z.string(),
 	description: z.string(),
 	startDate: z.string(),
 	badge: z.string().optional(),
