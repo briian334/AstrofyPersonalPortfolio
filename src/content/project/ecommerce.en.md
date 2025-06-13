@@ -1,16 +1,11 @@
 ---
 id: 1
-title: "E-commerce with Vuea"
-slug: "ecommerce"
-description: "Full e-commerce application with shopping cart, user authentication, and payment gateway."
-startDate: "2024-01-15"
-badge: "Featured"
-technologies: ["Vue.js", "Tailwind CSS", "DaisyUI", "Vite"]
-image: "/vuejs.webp"
+title: "Ecommerce Project"
+description: "Full ecommerce application"
+startDate: "2020-01-15"
+image: "/vue.js.webp"
+technologies: ["Vue.js"]
 lang: "en"
-links:
-  demo: "https://mi-ecommerce-demo.com"
-  github: "https://github.com/usuario/ecommerce-app"
 ---
 
-Full e-commerce application with shopping cart, user authentication, and payment gateway.
+Ecommerce project description here.

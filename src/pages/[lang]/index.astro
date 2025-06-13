@@ -10,10 +10,10 @@ export async function getStaticPaths() {
 	const projects = await getCollection("project");
 	return projects.flatMap((project) => [
 		{
-			params: { slug: project.slug, lang: "es" },
+			params: { lang: "es" },
 		},
 		{
-			params: { slug: project.slug, lang: "en" },
+			params: { lang: "en" },
 		},
 	]);
 }
@@ -21,19 +21,24 @@ export async function getStaticPaths() {
 const lang = Astro.params.lang as Lang;
 const translations: Record<Lang, typeof en> = { es, en };
 const t = translations[lang];
+let recentProjects;
 
 // Obtener los proyectos desde la colección
-const allProjects = await getCollection("project");
+try {
+	const allProjects = await getCollection("project");
 
-// Filtrar por idioma y ordenar por fecha descendente
-const recentProjects = allProjects
-	.filter((p) => p.data.lang === lang)
-	.sort((a, b) => {
-		const dateA = new Date(a.data.startDate);
-		const dateB = new Date(b.data.startDate);
-		return dateB.getTime() - dateA.getTime();
-	})
-	.slice(0, 3); // Solo los 3 más recientes
+	// Filtrar por idioma y ordenar por fecha descendente
+	recentProjects = allProjects
+		.filter((p) => p.data.lang === lang)
+		.sort((a, b) => {
+			const dateA = new Date(a.data.startDate);
+			const dateB = new Date(b.data.startDate);
+			return dateB.getTime() - dateA.getTime();
+		})
+		.slice(0, 3); // Solo los 3 más recientes
+} catch (error) {
+	console.error("Error al obtener los proyectos:", error);
+}
 ---
 
 <BaseLayout sideBarActiveItemID="home" lang={lang}>

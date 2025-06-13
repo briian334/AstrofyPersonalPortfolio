@@ -10,10 +10,10 @@ export async function getStaticPaths() {
 	const projects = await getCollection("project");
 	return projects.flatMap((project) => [
 		{
-			params: { slug: project.slug, lang: "es" },
+			params: { lang: "es" },
 		},
 		{
-			params: { slug: project.slug, lang: "en" },
+			params: { lang: "en" },
 		},
 	]);
 }
