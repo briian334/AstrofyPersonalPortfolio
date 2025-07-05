@@ -1,0 +1,29 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import HorizontalCard from "@/components/HorizontalCard.astro";
+
+---
+
+<BaseLayout sideBarActiveItemID="home" lang={lang}>
+	<div class="mt-5 pb-12">
+		<div class="py-1 text-xl">{t.home.title}</div>
+		<div class="text-4xl font-bold">{t.home.subtitle}</div>
+		<div class="py-3 text-xl font-light">{t.home.position}</div>
+		<div class="py-2">
+			<p class="text-lg font-bold">{t.home.descriptionTitle}</p>
+		</div>
+		<div class="py-2">
+			<p class="text-lg">{t.home.descriptionSubTitle}</p>
+		</div>
+	</div>
+
+	<div>
+		<div class="mb-2 w-full text-3xl font-bold">{t.home.lastProjectsTitle}</div>
+	</div>
+
+	<main class="container mx-auto px-4 py-8">
+		<div class="grid grid-cols-1 gap-6">
+			<!-- {recentProjects.map((project) => <HorizontalCard project={project} lang={lang} />)} -->
+		</div>
+	</main>
+</BaseLayout>

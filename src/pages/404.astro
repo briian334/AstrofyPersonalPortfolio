@@ -1,8 +1,8 @@
 ---
-import BaseLayout from "../../layouts/BaseLayout.astro";
-import type { Lang } from "../../types/lang.type";
-import en from "../../i18n/en";
-import es from "../../i18n/es";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import type { Lang } from "@/types/lang.type";
+import en from "@/i18n/en";
+import es from "@/i18n/es";
 
 export function getStaticPaths() {
 	return [{ params: { lang: "es" } }, { params: { lang: "en" } }];
