@@ -1,15 +1,6 @@
 ---
-import type { Lang } from "../types/lang.type";
-import en from "../i18n/en";
-import es from "../i18n/es";
 import LangSelector from "./LangSelector.astro";
 import ThemeSelector from "./ThemeSelector.astro";
-
-export const defaultLang = "/es";
-
-const { lang } = Astro.props;
-const translations: Record<Lang, typeof en> = { es, en };
-const t = translations[lang];
 ---
 
 <div
@@ -31,12 +22,10 @@ const t = translations[lang];
 				</svg>
 			</label>
 		</div>
-		<div class="navbar-center">
-			<a class="btn btn-ghost text-xl normal-case" href="/">{t.nav.name} 👨‍💻</a>
-		</div>
+
 		<div class="navbar-end">
 			<ThemeSelector />
-			<LangSelector lang={lang} />
+			<LangSelector />
 		</div>
 	</div>
 </div>

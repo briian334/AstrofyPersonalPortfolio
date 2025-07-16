@@ -3,19 +3,6 @@ import SideBarFooter from "./SideBarFooter.astro";
 import { Image } from "astro:assets";
 import SideBarMenu from "./SideBarMenu.astro";
 
-import type { Lang } from "../types/lang.type";
-import en from "../i18n/en";
-import es from "../i18n/es";
-
-export function getStaticPaths() {
-	return [{ params: { lang: "es" } }, { params: { lang: "en" } }];
-}
-
-export const defaultLang = "/es";
-
-const lang = Astro.params.lang as Lang;
-const translations = { es, en };
-const t = translations[lang];
 interface Props {
 	sideBarActiveItemID: string;
 }
@@ -41,7 +28,7 @@ const { sideBarActiveItemID } = Astro.props as Props;
 				</div>
 			</a>
 		</div>
-		<SideBarMenu sideBarActiveItemID={sideBarActiveItemID} lang={lang} />
-		<SideBarFooter lang={lang} />
+		<SideBarMenu sideBarActiveItemID={sideBarActiveItemID} />
+		<SideBarFooter />
 	</aside>
 </div>

@@ -5,16 +5,19 @@ interface LocaleSetting {
 		label: string;
 		lang?: string;
 		dir?: "rtl" | "ltr";
+		flag?: string;
 	};
 }
 
 export const LOCALES_SETTING: LocaleSetting = {
 	es: {
-		label: "Spanish",
+		label: "Español",
 		lang: "es-ES",
+		flag: "mx",
 	},
 	en: {
 		label: "English",
 		lang: "en-US",
+		flag: "us",
 	},
 };

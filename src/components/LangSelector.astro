@@ -1,55 +1,79 @@
 ---
-import type { Lang } from "../types/lang.type";
-import en from "../i18n/en";
-import es from "../i18n/es";
+import { getLocalePaths, LOCALES, type Lang } from "@/i18n"; // Usa el mismo helper que el otro componente
 import { Languages } from "@lucide/astro";
-
-export const defaultLang = "/es";
-
-const { lang } = Astro.props;
-const translations: Record<Lang, typeof en> = { es, en };
-const t = translations[lang];
+const currentLocale = Astro.currentLocale as Lang;
+const localePaths = getLocalePaths(Astro.url);
 ---
 
+<!-- 🌐 Mobile -->
 <div class="dropdown dropdown-end lg:hidden">
 	<label tabindex="0" class="btn btn-ghost m-0">
 		<Languages />
 	</label>
-	<ul tabindex="0" class="menu menu-md dropdown-content rounded-box bg-base-200 w-40 p-4 shadow">
-		<li>
-			<button role="button" class="language-link flex items-center gap-2" data-lang="es">
-				<img src="https://flagcdn.com/es.svg" width="20" alt="España" class="rounded-sm" />
-				<span>{t.languageOptions.es}</span>
-			</button>
-		</li>
-		<li>
-			<button role="button" class="language-link flex items-center gap-2" data-lang="en">
-				<img src="https://flagcdn.com/gb.svg" width="20" alt="Inglés" class="rounded-sm" />
-				<span>{t.languageOptions.en}</span>
-			</button>
-		</li>
+	<ul
+		tabindex="0"
+		class="menu menu-md dropdown-content rounded-box bg-base-200 z-50 w-40 p-4 shadow"
+	>
+		{
+			localePaths.map(({ lang, path }) => (
+				<li>
+					<button
+						class="flex items-center gap-2"
+						data-lang={lang}
+						data-path={path}
+						aria-current={lang === currentLocale ? "page" : undefined}
+					>
+						<img
+							src={`https://flagcdn.com/${LOCALES[lang].flag}.svg`}
+							width="20"
+							alt={lang}
+							class="rounded-sm"
+						/>
+						<span>{LOCALES[lang].label}</span>
+					</button>
+				</li>
+			))
+		}
 	</ul>
 </div>
 
+<!-- 🖥️ Desktop -->
 <div class="dropdown dropdown-hover dropdown-end hidden lg:block">
 	<div tabindex="0" role="button" class="btn btn-ghost m-1">
 		<Languages size={18} />
-		{t.languageLabel}
+		{LOCALES[currentLocale].label}
 	</div>
-	<ul tabindex="0" class="dropdown-content menu bg-base-200 rounded-box z-10 w-52 p-2 shadow-sm">
-		<li>
-			<button role="button" class="language-link flex items-center gap-2" data-lang="es">
-				<img src="https://flagcdn.com/es.svg" width="20" alt="España" class="rounded-sm" />
-				<span>{t.languageOptions.es}</span>
-			</button>
-		</li>
-		<li>
-			<button role="button" class="language-link flex items-center gap-2" data-lang="en">
-				<img src="https://flagcdn.com/gb.svg" width="20" alt="Inglés" class="rounded-sm" />
-				<span>{t.languageOptions.en}</span>
-			</button>
-		</li>
+	<ul tabindex="0" class="dropdown-content menu bg-base-200 rounded-box z-50 w-52 p-2 shadow-sm">
+		{
+			localePaths.map(({ lang, path }) => (
+				<li>
+					<button
+						class="flex items-center gap-2"
+						data-lang={lang}
+						data-path={path}
+						aria-current={lang === currentLocale ? "page" : undefined}
+					>
+						<img
+							src={`https://flagcdn.com/${LOCALES[lang].flag}.svg`}
+							width="20"
+							alt={lang}
+							class="rounded-sm"
+						/>
+						<span>{LOCALES[lang].label}</span>
+					</button>
+				</li>
+			))
+		}
 	</ul>
 </div>
 
-<script src="../scripts/langSelector.ts"></script>
+<script is:inline>
+	document.querySelectorAll("button[data-lang]").forEach((btn) => {
+		btn.addEventListener("click", (e) => {
+			const lang = btn.dataset.lang;
+			const path = btn.dataset.path;
+			localStorage.selectedLang = lang;
+			window.location.href = path;
+		});
+	});
+</script>

@@ -1,0 +1,77 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import HorizontalCard from "@/components/HorizontalCard.astro";
+import { LOCALES, useTranslations, type Lang } from "@/i18n";
+import { getCollection } from "astro:content";
+
+const t = useTranslations(Astro.currentLocale as Lang);
+import { getRelativeLocaleUrl } from "astro:i18n";
+
+const locale = Astro.currentLocale as Lang;
+
+const title = t({ es: "Inicio", en: "Home" });
+export const getStaticPaths = () =>
+	Object.keys(LOCALES).map((lang) => ({
+		params: { lang },
+	}));
+
+const projects = (await getCollection("project"))
+	.filter((post) => post.id.split("/")[0] === locale)
+	.sort((a, b) => a.data.date.valueOf() - b.data.date.valueOf());
+---
+
+<BaseLayout title={title} sideBarActiveItemID="home">
+	<div class="mt-5 pb-12">
+		<div class="py-1 text-xl">
+			{
+				t({
+					es: "Hola 👋",
+					en: "Hey there 👋",
+				})
+			}
+		</div>
+		<div class="text-4xl font-bold">
+			{t({ es: "Soy Brian Cervantes", en: "I'm Brian Cervantes" })}
+		</div>
+		<div class="py-3 text-xl font-light">
+			{
+				t({
+					es: "Ingeniero en Software y Desarrollador Fullstack",
+					en: "Software Engineer and Fullstack Developer",
+				})
+			}
+		</div>
+		<div class="py-2">
+			<p class="text-lg font-bold">
+				{
+					t({
+						es: "Construyo software funcional, seguro y pensado para el usuario.",
+						en: "I build functional, secure and user-centered software.",
+					})
+				}
+			</p>
+		</div>
+		<div class="py-2">
+			<p class="text-lg">
+				{
+					t({
+						es: "Fullstack Developer con experiencia en .NET, Vue y Flutter. He trabajado en APIs, portales web móviles y proyectos IoT con ESP32 y Firebase. Me encanta mejorar procesos y crear soluciones que realmente funcionan.",
+						en: "Fullstack Developer with experience in .NET, Vue and Flutter. I have worked on APIs, mobile-first web portals and IoT projects with ESP32 and Firebase. I love improving processes and creating solutions that really work.",
+					})
+				}
+			</p>
+		</div>
+	</div>
+
+	<div>
+		<div class="mb-2 w-full text-3xl font-bold">
+			{t({ es: "Mis últimos proyectos", en: "My last projects" })}
+		</div>
+	</div>
+
+	<main class="container mx-auto px-4 py-8">
+		<div class="grid grid-cols-1 gap-6">
+			{projects.map((project) => <HorizontalCard project={project} />)}
+		</div>
+	</main>
+</BaseLayout>

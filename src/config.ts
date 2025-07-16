@@ -18,10 +18,3 @@ export const SITE_DESCRIPTION: string | Multilingual = {
 	es: "Portfolio Website por Brian Cervantes usando Astrofy Template ⚡️",
 	en: "Portfolio Website by Brian Cervantes using Astrofy Template ⚡️",
 };
-
-export const X_ACCOUNT: string | Multilingual = "@psephopaiktes";
-
-export const NOT_TRANSLATED_CAUTION: string | Multilingual = {
-	en: "This page is not available in your language.",
-	es: "Esta página no está disponible en su idioma.",
-};

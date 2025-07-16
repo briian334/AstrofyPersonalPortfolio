@@ -1,13 +1,6 @@
 ---
-import type { Lang } from "../types/lang.type";
-import en from "../i18n/en";
-import es from "../i18n/es";
-
-export const defaultLang = "/es";
-
-const { lang } = Astro.props;
-const translations: Record<Lang, typeof en> = { es, en };
-const t = translations[lang];
+import { useTranslations, type Lang } from "@/i18n";
+const t = useTranslations(Astro.currentLocale as Lang);
 ---
 
 <div class="social-icons sticky bottom-0 flex justify-center self-center px-4 pt-1 pb-5">
@@ -51,7 +44,10 @@ const t = translations[lang];
 		</svg>
 	</a>
 	<a
-		href={`https://wa.me/5216145889200?text=${t.sideBarFooter.whatsAppMessage}`}
+		href={t({
+			es: "https://wa.me/5216145889200?text=%C2%A1Hola%20Brian!%20Acabo%20de%20ver%20tu%20portafolio%20web%20y%20me%20gustar%C3%ADa%20contactarte%20para%20explorar%20oportunidades%20de%20colaboraci%C3%B3n%20o%20proyectos.%0A%0AQuedo%20atento%2Fa%20a%20tu%20respuesta.%0ASaludos.",
+			en: "https://wa.me/5216145889200?text=Hi%20Brian!%0AI%20just%20saw%20your%20web%20portfolio%20and%20would%20love%20to%20connect%20with%20you%20to%20explore%20collaboration%20opportunities%20or%20potential%20projects.%0A%0ALooking%20forward%20to%20your%20reply.%0ABest%20regards.",
+		})}
 		target="_blank"
 		class="mx-3"
 		aria-label="WhatsApp"

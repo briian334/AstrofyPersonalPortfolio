@@ -1,48 +1,102 @@
 ---
 import { Image } from "astro:assets";
 import type { CollectionEntry } from "astro:content";
-import type { ProjectSchema } from "../content/config";
-import type { Lang } from "../types/lang.type";
-import { getRelativeLocaleUrl } from "astro:i18n";
-import { getBadgeClass } from "../types/projects.type"; // solo si sigues usando badges
-import en from "../i18n/en";
-import es from "../i18n/es";
+import { getBadgeClass } from "../types/projects.type";
+import { useTranslations, type Lang, getProjectUrl } from "@/i18n";
 
+// Definimos los props del componente
 interface Props {
 	project: CollectionEntry<"project">;
-	lang: Lang;
 }
 
-const { project, lang } = Astro.props;
-const t = { es, en }[lang];
-const data = project.data;
+// Obtenemos los props
+const { project } = Astro.props;
+
+// Obtenemos los datos del proyecto de forma más directa
+const { data, id } = project;
+
+// Obtenemos la configuración de internacionalización
+const locale = Astro.currentLocale as Lang;
+const t = useTranslations(locale);
+
+// Definimos un objeto para mapear los textos de los badges a español
+// Esto centraliza la lógica de traducción de los badges
+const badgeTranslations = {
+	Featured: "Destacado",
+	"In progress": "En progreso",
+	Important: "Importante",
+};
+
+// Función para obtener el texto del badge según el idioma
+const getTranslatedBadge = (badge: string) => {
+	if (locale === "es") {
+		return badgeTranslations[badge as keyof typeof badgeTranslations] || badge;
+	}
+	return badge;
+};
 ---
 
-<div class="bg-base-100 rounded-lg transition ease-in-out hover:scale-[102%] hover:shadow-xl">
-	<a href={getRelativeLocaleUrl(lang, `projects/${project.slug}`)}>
-		<div class="hero-content flex-col md:flex-row">
-			<Image
-				src={data.image}
-				width={750}
-				height={422}
-				format="webp"
-				alt={data.title}
-				class="max-w-full rounded-lg md:max-w-[13rem]"
-			/>
-			<div class="w-full grow">
-				<h1 class="text-xl font-bold">
-					{data.title}
+<div
+	class="card compact bg-base-100 transition-all duration-300 ease-in-out hover:scale-[102%] hover:shadow-xl"
+>
+	<a href={getProjectUrl(locale, id)} class="block">
+		<div class="card-body flex-col p-4 md:flex-row">
+			{
+				/*
+        Contenedor de la imagen:
+        - aspect-video: Mantiene una relación de aspecto 16:9, ideal para la mayoría de las imágenes y evita saltos.
+        - w-full md:w-48: La imagen ocupa el ancho completo en móviles y un ancho fijo en pantallas medianas.
+        - h-auto: La altura se ajusta automáticamente para mantener el aspect-ratio.
+        - overflow-hidden rounded-lg: Para que la imagen se adapte al contenedor y mantenga los bordes redondeados.
+        - flex-shrink-0: Evita que la imagen se encoja cuando no hay espacio suficiente.
+      */
+			}
+			<div class="relative aspect-video w-full flex-shrink-0 overflow-hidden rounded-lg md:w-52">
+				{
+					/*
+          Componente Image de Astro:
+          - class="w-full h-full object-cover": La imagen ocupará el 100% del ancho y alto de su contenedor,
+            y 'object-cover' asegura que la imagen cubra el área manteniendo su relación de aspecto,
+            recortando si es necesario, lo que es clave para evitar saltos y mantener la consistencia visual.
+          - loading="lazy": Mejora el rendimiento al cargar la imagen solo cuando está cerca del viewport.
+          - decoding="async": Descomprime la imagen de forma asíncrona, sin bloquear el hilo principal.
+        */
+				}
+				<Image
+					src={data.image}
+					alt={data.title}
+					class="h-full w-full object-cover"
+					loading="lazy"
+					decoding="async"
+				/>
+			</div>
+
+			<div class="flex w-full grow flex-col justify-between py-2 md:px-4 md:py-0">
+				<div>
+					<h2 class="card-title mb-2 text-xl font-bold">
+						{data.title}
+						{/* Si data.badge existe, mostramos el badge */}
+						{
+							data.badge && (
+								<div class={`badge mx-2 ${getBadgeClass(data.badge)}`}>
+									{getTranslatedBadge(data.badge)}
+								</div>
+							)
+						}
+					</h2>
+					{/* Usamos 'card-normal' o 'text-base' para una tipografía estándar de DaisyUI */}
+					<p class="text-base-content/80 py-1 text-base">
+						{data.description}
+					</p>
+				</div>
+
+				{/* Las acciones de la tarjeta (tecnologías) al final */}
+				<div class="card-actions mt-4 flex-wrap justify-end gap-2">
 					{
-						data.badge && (
-							<div class={`badge mx-2 ${getBadgeClass(data.badge)}`}>
-								{t.projects.badge[data.badge]}
-							</div>
-						)
+						data.technologies.map((tech) => (
+							<span class="badge badge-outline badge-primary">{tech}</span>
+						))
 					}
-				</h1>
-				<p class="text-1xl py-1">{data.description}</p>
-				<div class="card-actions justify-end">
-					{data.technologies.map((tech) => <span class="badge badge-outline">{tech}</span>)}
 				</div>
 			</div>
 		</div>

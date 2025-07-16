@@ -1,0 +1,50 @@
+---
+import { LOCALES, useTranslations, type Lang } from "@/i18n";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { getCollection } from "astro:content";
+import HorizontalCard from "@/components/HorizontalCard.astro";
+
+const locale = Astro.currentLocale as Lang;
+const t = useTranslations(locale);
+
+const projects = (await getCollection("project"))
+	.filter((post) => post.id.split("/")[0] === locale)
+	.sort((a, b) => a.data.date.valueOf() - b.data.date.valueOf());
+
+const title = t({
+	es: "Proyectos",
+	en: "Projects",
+});
+
+export const getStaticPaths = () =>
+	Object.keys(LOCALES).map((lang) => ({
+		params: { lang },
+	}));
+---
+
+<BaseLayout title={title} sideBarActiveItemID="projects">
+	<div class="mx-auto max-w-full px-4 sm:px-6 lg:px-8">
+		<section>
+			<div class="mb-0 w-full text-4xl font-bold md:mt-5">
+				{t({ es: "Mis Proyectos", en: "My Projects" })}
+			</div>
+		</section>
+
+		<div class="mt-2 pb-8">
+			<div class="py-2">
+				<p class="prose prose-lg max-w-3xl 2xl:max-w-5xl">
+					{
+						t({
+							es: "Aquí encontrarás una selección de los proyectos más destacados en los que he trabajado. Cada proyecto representa un desafío único y una oportunidad para aplicar diferentes tecnologías y metodologías de desarrollo. Desde aplicaciones web completas hasta componentes especializados, estos trabajos reflejan mi pasión por crear soluciones innovadoras y funcionales.",
+							en: "Here you will find a selection of the most notable projects I have worked on. Each project represents a unique challenge and an opportunity to apply different technologies and development methodologies. From complete web applications to specialized components, these works reflect my passion for creating innovative and functional solutions.",
+						})
+					}
+				</p>
+			</div>
+		</div>
+
+		<div class="grid grid-cols-1 gap-4">
+			{projects.map((project) => <HorizontalCard project={project} />)}
+		</div>
+	</div>
+</BaseLayout>

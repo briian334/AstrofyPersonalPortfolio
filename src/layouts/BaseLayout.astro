@@ -1,74 +1,39 @@
 ---
-import BaseHead from "@components/BaseHead.astro";
 import Header from "@components/Header.astro";
 import Footer from "@components/Footer.astro";
 import SideBar from "@components/SideBar.astro";
-import { ClientRouter } from "astro:transitions";
-import "../styles/global.css";
+import "@/styles/global.css";
 import LangSelector from "@components/LangSelector.astro";
 import ThemeSelector from "@components/ThemeSelector.astro";
 
-import { SITE_TITLE, SITE_DESCRIPTION, TRANSITION_API } from "../config";
-
-import type { Lang } from "../types/lang.type";
+import { SITE_TITLE, SITE_DESCRIPTION } from "@/config";
+import { useTranslations, LOCALES, type Lang } from "@/i18n";
+const t = useTranslations(Astro.currentLocale as Lang);
 
 interface Props {
-	image?: string;
 	title?: string;
 	description?: string;
 	includeSidebar?: boolean;
 	sideBarActiveItemID: string;
-	ogType?: string;
 }
 
-const {
-	image,
-	title = SITE_TITLE,
-	description = SITE_DESCRIPTION,
-	includeSidebar = true,
-	sideBarActiveItemID,
-	ogType,
-} = Astro.props as Props;
+const { title, description, includeSidebar = true, sideBarActiveItemID } = Astro.props as Props;
+
+const locale = Astro.currentLocale as Lang;
+const localeTitle = title ? `${title} - ${t(SITE_TITLE)}` : t(SITE_TITLE);
+const localeDescription = description || t(SITE_DESCRIPTION);
 ---
 
 <!doctype html>
-<html lang={lang}>
+<html lang={LOCALES[locale].lang || locale} dir={LOCALES[locale].dir || null}>
 	<head>
 		<!-- Global Metadata -->
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width,initial-scale=1" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta charset="UTF-8" />
+		<title>{localeTitle}</title>
+		<meta name="description" content={localeDescription} />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<link rel="sitemap" href="/sitemap-index.xml" />
 		<meta name="generator" content={Astro.generator} />
-
-		<BaseHead title={title} description={description} image={image} ogType={ogType} />
-		{TRANSITION_API && <ClientRouter />}
-
-		<!-- Script para aplicar el tema antes de renderizar la página -->
-		<script is:inline>
-			try {
-				// Obtener el tema desde localStorage o usar 'nord' como predeterminado
-				const savedTheme = localStorage.getItem("theme") || "nord";
-				document.documentElement.setAttribute("data-theme", savedTheme);
-
-				// Redirigir basado en idioma preferido lo antes posible
-				const savedLang = localStorage.getItem("preferredLang") || "es";
-				document.documentElement.setAttribute("lang", savedLang);
-
-				const currentPath = window.location.pathname;
-
-				// Extrae el lang actual desde la URL (ej: 'es' en /es/projects)
-				const urlLangMatch = currentPath.match(/^\/(es|en)(\/|$)/);
-				const currentLangInURL = urlLangMatch?.[1];
-
-				// Si el lang en URL es diferente al guardado en localStorage, redirige
-				if (currentLangInURL && currentLangInURL !== savedLang) {
-					const newPath = currentPath.replace(/^\/(es|en)/, `/${savedLang}`);
-					window.location.replace(newPath + window.location.search + window.location.hash);
-				}
-			} catch (e) {
-				console.warn("No se pudo acceder a localStorage. Tema o idioma no se aplicarán.", e);
-			}
-		</script>
 	</head>
 	<body>
 		<div
@@ -79,36 +44,22 @@ const {
 				<div class="navbar-center"></div>
 				<div class="navbar-end">
 					<ThemeSelector class="mx-4" />
-					<LangSelector lang={lang} />
+					<LangSelector />
 				</div>
 			</div>
 		</div>
 		<div class="bg-base-100 drawer lg:drawer-open">
 			<input id="my-drawer" type="checkbox" class="drawer-toggle" />
 			<div class="drawer-content bg-base-100">
-				<Header title={SITE_TITLE} lang={lang} />
+				<Header title={SITE_TITLE} lang={locale} />
 				<div class="md:flex md:justify-center">
-					<main class="max-w-[100vw] p-6 pt-10 lg:max-w-[1200px]">
+					<main class="max-w-[100vw] p-6 pt-10 md:max-w-[100vw]">
 						<slot />
 					</main>
 				</div>
-				<Footer lang={lang} />
+				<Footer lang={locale} />
 			</div>
 			{includeSidebar && <SideBar sideBarActiveItemID={sideBarActiveItemID} />}
 		</div>
-		<!-- Script para inicializar el tema, se carga en cada página -->
-		<script>
-			// Importar e inicializar el tema después de la carga del DOM
-			import { initTheme } from "../scripts/themeSelector.ts";
-
-			document.addEventListener("DOMContentLoaded", () => {
-				initTheme();
-			});
-
-			// Re-inicializar después de una transición de página con View Transitions API
-			document.addEventListener("astro:page-load", () => {
-				initTheme();
-			});
-		</script>
 	</body>
 </html>

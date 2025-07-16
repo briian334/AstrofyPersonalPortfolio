@@ -1,18 +1,17 @@
 import { DEFAULT_LOCALE_SETTING, LOCALES_SETTING } from "./locales";
 import { getRelativeLocaleUrl } from "astro:i18n";
 
-
 /**
  * User-defined locales list
  * @constant @readonly
  */
 export const LOCALES = LOCALES_SETTING as Record<string, LocaleConfig>;
 type LocaleConfig = {
-  readonly label: string;
-  readonly lang?: string;
-  readonly dir?: "ltr" | "rtl";
+	readonly label: string;
+	readonly lang?: string;
+	readonly dir?: "ltr" | "rtl";
+	readonly flag?: string;
 };
-
 
 /**
  * Type for the language code
@@ -21,13 +20,11 @@ type LocaleConfig = {
  */
 export type Lang = keyof typeof LOCALES;
 
-
 /**
  * Default locale code
  * @constant @readonly
-*/
+ */
 export const DEFAULT_LOCALE = DEFAULT_LOCALE_SETTING as Lang;
-
 
 /**
  * Type for the multilingual object
@@ -36,22 +33,20 @@ export const DEFAULT_LOCALE = DEFAULT_LOCALE_SETTING as Lang;
  */
 export type Multilingual = { [key in Lang]?: string };
 
-
 /**
  * Helper to get the translation function
  * @param - The current language
  * @returns - The translation function
  */
 export function useTranslations(lang: Lang) {
-  return function t(multilingual: Multilingual | string): string {
-    if (typeof multilingual === "string") {
-      return multilingual;
-    } else {
-      return multilingual[lang] || multilingual[DEFAULT_LOCALE] || "";
-    }
-  };
+	return function t(multilingual: Multilingual | string): string {
+		if (typeof multilingual === "string") {
+			return multilingual;
+		} else {
+			return multilingual[lang] || multilingual[DEFAULT_LOCALE] || "";
+		}
+	};
 }
-
 
 /**
  * Helper to get corresponding path list for all locales
@@ -59,18 +54,17 @@ export function useTranslations(lang: Lang) {
  * @returns - The list of locale paths
  */
 export function getLocalePaths(url: URL): LocalePath[] {
-  return Object.keys(LOCALES).map((lang) => {
-    return {
-      lang: lang as Lang,
-      path: getRelativeLocaleUrl(lang, url.pathname.replace(/^\/[a-zA-Z-]+/, ''))
-    };
-  });
+	return Object.keys(LOCALES).map((lang) => {
+		return {
+			lang: lang as Lang,
+			path: getRelativeLocaleUrl(lang, url.pathname.replace(/^\/[a-zA-Z-]+/, "")),
+		};
+	});
 }
 type LocalePath = {
-  lang: Lang;
-  path: string;
+	lang: Lang;
+	path: string;
 };
-
 
 /**
  * Helper to get locale parms for Astro's `getStaticPaths` function
@@ -78,5 +72,16 @@ type LocalePath = {
  * @see https://docs.astro.build/en/guides/routing/#dynamic-routes
  */
 export const localeParams = Object.keys(LOCALES).map((lang) => ({
-  params: { lang },
+	params: { lang },
 }));
+
+/**
+ * Genera la URL localizada para un proyecto
+ * @param locale - Idioma actual (por ejemplo, "es", "en", etc.)
+ * @param id - ID del proyecto (ej: "es/mi-proyecto")
+ * @returns Ruta como "/es/projects/mi-proyecto/"
+ */
+export function getProjectUrl(locale: Lang, id: string): string {
+	const [, ...parts] = id.split("/");
+	return `/${locale}/projects/${parts.join("/")}/`;
+}

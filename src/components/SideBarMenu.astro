@@ -1,38 +1,35 @@
 ---
 const { sideBarActiveItemID } = Astro.props;
 const activeClass = "bg-base-300"; // For primary color replace with `active` class
-import type { Lang } from "../types/lang.type";
+import { useTranslations, type Lang } from "@/i18n";
 import { getRelativeLocaleUrl } from "astro:i18n";
-import en from "../i18n/en";
-import es from "../i18n/es";
+const t = useTranslations(Astro.currentLocale as Lang);
 
-export const defaultLang = "/es";
-interface Ilang {
-	lang: string;
-}
-const { lang } = Astro.props as Ilang;
-const translations: Record<Lang, typeof en> = { es, en };
-const t = translations[lang];
+const locale = Astro.currentLocale as Lang;
 ---
 
 <ul class="menu menu-md shrink grow overflow-y-auto">
 	<li>
-		<a class="py-3 text-base" id="home" href={getRelativeLocaleUrl(`${lang}`, "/")}>{t.nav.home}</a>
+		<a id="home" href={getRelativeLocaleUrl(locale, "/")} class="py-3 text-base">
+			{t({ es: "Inicio", en: "Home" })}
+		</a>
 	</li>
 	<li>
-		<a class="py-3 text-base" id="projects" href={getRelativeLocaleUrl(`${lang}`, "/projects")}
-			>{t.nav.projects}</a
-		>
+		<a id="projects" href={getRelativeLocaleUrl(locale, "/projects")} class="py-3 text-base">
+			{t({ es: "Proyectos", en: "Projects" })}
+		</a>
 	</li>
 	<li>
-		<a class="py-3 text-base" id="cv" href={getRelativeLocaleUrl(`${lang}`, "/cv")}>{t.nav.cv}</a>
+		<a id="cv" href={getRelativeLocaleUrl(locale, "/cv")} class="py-3 text-base">
+			{t({ es: "CV", en: "Resume" })}
+		</a>
 	</li>
 	<li>
 		<a
 			class="py-3 text-base"
 			href="mailto:contact.ricardo.cervanntes@hotmail.com"
 			target="_blank"
-			referrerpolicy="no-referrer-when-downgrade">{t.nav.contact}</a
+			referrerpolicy="no-referrer-when-downgrade">{t({ es: "Contacto", en: "Contact" })}</a
 		>
 	</li>
 </ul>

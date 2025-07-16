@@ -51,7 +51,7 @@ import { Sun, Moon } from "@lucide/astro";
 </div>
 <script>
 	// Función para establecer el tema
-	function setTheme(theme) {
+	function setTheme(theme: string) {
 		document.documentElement.setAttribute("data-theme", theme);
 		localStorage.setItem("theme", theme);
 	}

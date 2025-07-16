@@ -1,37 +1,35 @@
 ---
 import BaseLayout from "./BaseLayout.astro";
-import type { Lang } from "../types/lang.type";
-import type { ProjectSchema } from "../content/config";
-import en from "../i18n/en";
-import es from "../i18n/es";
+import { useTranslations, type Lang } from "@/i18n";
+const locale = Astro.currentLocale as Lang;
+const t = useTranslations(locale);
 
 interface Props {
 	title: string;
-	image: string;
+	image?: string;
 	badge?: string;
 	technologies: string[];
+	frontmatter?: undefined;
 	links?: {
 		demo?: string;
 		github?: string;
 		live?: string;
 	};
-	lang: Lang;
 }
 
-const { title, image, badge, technologies, links, lang } = Astro.props as Props;
-const t = { es, en }[lang];
+const { title, image, badge, technologies, links } = Astro.props.frontmatter || Astro.props;
 ---
 
-<BaseLayout title={title} sideBarActiveItemID="projects" lang={lang}>
+<BaseLayout title={title} sideBarActiveItemID="projects">
 	<article class="prose max-w-none">
 		<h1>{title}</h1>
 
 		{badge && <div class="badge">{badge}</div>}
 
-		<img src={image} alt={title} class="my-4 rounded-lg shadow-lg" />
+		{image && <img src={image} alt={title} class="my-4 rounded-lg shadow-lg" />}
 
 		<section class="mb-4">
-			<h2 class="text-xl font-semibold">{t.projects.technologies}</h2>
+			<h2 class="text-xl font-semibold">{t({ es: "Tecnologías", en: "Technologies" })}</h2>
 			<div class="flex flex-wrap gap-2">
 				{technologies.map((tech) => <span class="badge badge-outline">{tech}</span>)}
 			</div>
